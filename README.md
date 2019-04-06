@@ -22,7 +22,7 @@ Wsaa {
      wsaa_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
      tmpTAFile: 'TA.xml',
      service: 'wsfe',
-     debug: true,
+     debug: false,
      wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
      mock: false },
   certifcate:
@@ -33,11 +33,12 @@ Wsaa {
      issuer: { CN: 'Computadores Test', C: 'AR', O: 'AFIP' },
      subject: { CN: 'invoicedev', SN: 'CUIT 20278650988' } } }
 ```
-Cuaquier de la opciones de configuracion se pueden cambiar en el constructor de la clase, por ejemplo, si quiero deshabilitar el debug:
+Cuaquier de la opciones de configuracion se pueden cambiar en el constructor de la clase, por ejemplo, si quiero habilitar el debug:
 
 
 ```javascript
 var wsaa = new Wsaa();
+//var wsaa = new Wsaa({debug:true}); // Habilita el debug
 ```
 
 Las mas importantes son:
@@ -72,7 +73,7 @@ TRA {
      wsaa_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
      tmpTAFile: 'TA.xml',
      service: 'wsfe',
-     debug: true,
+     debug: false,
      wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
      mock: false },
   TRA:
@@ -184,3 +185,4 @@ console.log(response);
 ```
 
 Arriba se ve la respuesta del Webservice.
+
