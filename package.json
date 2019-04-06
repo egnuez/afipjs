@@ -1,0 +1,31 @@
+{
+  "name": "afipjs",
+  "version": "1.0.0",
+  "description": "Libreria para uso de los Webservices de AFIP con Node.js",
+  "main": "afip.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emilianito/afipjs.git"
+  },
+  "keywords": [
+    "afip",
+    "node",
+    "javascript",
+    "webservices"
+  ],
+  "author": " <Emiliano Nunez> (example.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emilianito/afipjs/issues"
+  },
+  "homepage": "https://github.com/emilianito/afipjs#readme",
+  "dependencies": {
+    "@fidm/x509": "^1.2.1",
+    "node-forge": "^0.7.6",
+    "soap": "^0.24.0",
+    "xml2js": "^0.4.19"
+  }
+}
