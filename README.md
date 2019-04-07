@@ -111,7 +111,7 @@ TA {
      debug: false,
      wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL' },
   TA:
-   '\n<loginTicketResponse version="1.0">\n    <header>\n        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n        <destination>SERIALNUMBER=CUIT 20xxxxxxxx8, CN=invoicedev</destination>\n        <uniqueId>190169448</uniqueId>\n        <generationTime>2019-04-04T13:42:31.804-03:00</generationTime>\n
+   '\n<loginTicketResponse version="1.0">\n    <header>\n        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n        <destination>SERIALNUMBER=CUIT 20278650988, CN=invoicedev</destination>\n        <uniqueId>190169448</uniqueId>\n        <generationTime>2019-04-04T13:42:31.804-03:00</generationTime>\n
      <expirationTime>2019-04-05T01:42:31.804-03:00</expirationTime>\n    </header>\n    <credentials>\n        <token>PD94bWwgdmVyc2....</token>\n        <sign>....</sign>\n    </credentials>\n</loginTicketResponse>\n',
   TA_parsed:
    { generationTime: '2019-04-04T13:42:31.804-03:00',
@@ -120,7 +120,7 @@ TA {
       'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0i....',
      sign:
       'IhDUsUWjZ+8jCqi...',
-     cuit: '20xxxxxxxx8' } }
+     cuit: '20278650988' } }
 ```
 
 Arriba se ve el TA crudo en XML, y parseado para acceder mas facilmete a los datos del ticket.
@@ -162,7 +162,7 @@ console.log(miTA2);
    'PD94bWwgdmVyc2lvbj0i....',
   sign:
    'IhDUsUWjZ+8jCqiM.....',
-  cuit: '20xxxxxxxx8' }
+  cuit: '20278650988' }
 ```
 ```javascript
 console.log(miTA2.isValid());
@@ -174,6 +174,12 @@ true
 
 Ahora que ya hay un ticket valido creado, se puede empezar a utilizar los servicio de Factura Electronica, provisto por el Webservice Wsfe1, para es necesario crear un objeto Wsfe1 y luego llamar al servicio que necesitemos:
 
+## Servicios
+
+Los parametros de cada servicio se pueden encontrar en la [documentacion oficial] de la AFIP(http://www.afip.gob.ar/ws/documentacion/ws-factura-electronica.asp)
+
+### FEDummy (para saber si el server esta funcionando bien)
+
 ```javascript
 const wsfe = new Wsfe1(TA);
 const response = await wsfe.FEDummy({});
@@ -183,12 +189,6 @@ console.log(response);
 ```javascript
 { FEDummyResult: { AppServer: 'OK', DbServer: 'OK', AuthServer: 'OK' } }
 ```
-
-Arriba se ve la respuesta del Webservice.
-
-## Servicios
-
-Los parametros de cada servicio se pueden encontrar en la [documentacion oficial] de la AFIP(http://www.afip.gob.ar/ws/documentacion/ws-factura-electronica.asp)
 
 ### FEParamGetTiposIva (Obtiene los tipo de IVA)
 
