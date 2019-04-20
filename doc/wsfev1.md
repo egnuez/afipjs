@@ -172,4 +172,99 @@ Devuelve una lista con los archivos generados, en este caso 1 solo.
 
 ![Codigo de barras ](69148738398949.png)
 
-- Autenticacion [WSAA](doc/wsaa.md)
+## Mas servicios:
+
+- FECompUltimoAutorizado
+- FECAESolicitar
+- FECompConsultar
+- FEParamGetTiposIva
+- FEParamGetTiposCbte
+- FEParamGetTiposConcepto
+- FEParamGetTiposDoc
+- FEParamGetTiposMonedas
+- FEParamGetTiposOpcional
+- FEParamGetTiposTributos
+- FEParamGetPtosVenta
+- FEParamGetCotizacion
+
+### Autenticacion [WSAA](wsaa.md)
+
+## Errores
+
+### Prueba de llamada a un servicio con un token vencido
+
+```javascript
+const miTA2 = wsaa.createTAFromFile();
+console.log(miTA2.TA_parsed);
+console.log(miTA2.isValid());
+```
+
+```javascript
+{ generationTime: '2019-04-07T15:27:06.415-03:00', 
+  expirationTime: '2019-04-08T03:27:06.415-03:00',
+  token:
+   'PD94bWwgdmVyc...',
+  sign:
+   'VMUtFuumdowJIA...',
+  cuit: '20278650988' }
+false
+```
+
+```javascript
+response = await wsfe.FEParamGetTiposIva({});
+console.dir(response, { depth: null });
+```
+
+```javascript
+{ FEParamGetTiposIvaResult:
+   { Errors:
+      { Err:
+         [ { Code: 600,
+             Msg:
+              'ValidacionDeToken: No validaron las fechas del token GenTime, ExpTime, NowUTC: 1554661566 (4/7/2019 6:25:36 PM), 1554704826 (4/8/2019 6:27:06 AM), 4/20/2
+019 2:23:35 AM' } ] } } }
+```
+
+La descripcion y parametros de cada uno puede encontrarse en la [documentacion oficial](https://www.afip.gob.ar/ws/documentacion/ws-factura-electronica.asp)
+
+### Prueba sin conexion a internet:
+
+```javascript
+try {
+    response = await wsfe.FEParamGetTiposIva({});
+    console.dir(response, { depth: null });
+}catch(err){
+    console.log(err);
+}
+```
+
+```javascript
+{ Error: getaddrinfo ENOTFOUND wswhomo.afip.gov.ar wswhomo.afip.gov.ar:443
+    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:57:26)
+  errno: 'ENOTFOUND',
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'wswhomo.afip.gov.ar',
+  host: 'wswhomo.afip.gov.ar',
+  port: 443 }
+```
+### El webservice no responde:
+
+```javascript
+try {
+    response = await wsfe.FEParamGetTiposIva({});
+    console.dir(response, { depth: null });
+}catch(err){
+    console.log(err);
+}
+```
+
+```javascript
+{ Error: connect ETIMEDOUT 200.1.116.57:80
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1113:14)
+  errno: 'ETIMEDOUT',
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  address: '200.1.116.57',
+  port: 80 }
+```
