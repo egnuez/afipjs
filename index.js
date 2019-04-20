@@ -8,5 +8,6 @@
 
 module.exports= {
     Wsaa : require('./lib/wsaa').Wsaa,
-    Wsfe1 : require('./lib/wsfe1').Wsfe1,
+    Wsfe : require('./lib/wsfe').Wsfe,
+    Wsfex : require('./lib/wsfex').Wsfex,
 };

@@ -3,7 +3,7 @@
 La clase Wsaa permite manejar Tickets, la clase Wsfe1 permite acceder a los servicio de facturacion.
 
 ```javascript
-const { Wsaa, Wsfe1 } = require('./afipjs');
+const { Wsaa, Wsfe } = require('./afipjs');
 var wsaa = new Wsaa();
 console.log(wsaa);
 ```
@@ -14,12 +14,12 @@ Wsaa {
    { crt: 'crt_homo.crt',
      key: 'key_homo.key',
      prod: false,
-     wsaa_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     wsaa_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFile: 'TA.xml',
+     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     tmpTAFileDir: './',
      service: 'wsfe',
      debug: false,
-     wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     url_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
      mock: false },
   certifcate:
    { validFrom: 2018-08-01T23:11:35.000Z,
@@ -44,7 +44,7 @@ Las mas importantes son:
 - *key*: La ruta a la clave privada.
 - *prod*: Indica si se va a utilizar el entoro de Produccion o el Homologacion.
 - *service*: Indica para que web service se solicitara acceso, por ahora solo wsfe1 esta disponible.
-- *tmpTAFile*: Ruta al archivo que contendra' el tiket generado en caso de guardarlo con el metodo *save* o leerlo con *createTAFromFile*
+- *tmpTAFileDir*: Ruta al al directorio que contendra' el tiket generado en caso de guardarlo con el metodo *save* o leerlo con *createTAFromFile*
 
 El campo *certifcate* solo muestra informacion del certificado en *crt*
 
@@ -65,9 +65,9 @@ TRA {
    { crt: 'crt_homo.crt',
      key: 'key_homo.key',
      prod: false,
-     wsaa_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     wsaa_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFile: 'TA.xml',
+     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     tmpTAFileDir: './',
      service: 'wsfe',
      debug: false,
      wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
@@ -100,9 +100,9 @@ TA {
    { crt: 'crt_homo.crt',
      key: 'key_homo.key',
      prod: false,
-     wsaa_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     wsaa_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFile: 'TA.xml',
+     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
+     tmpTAFileDir: './',
      service: 'wsfe',
      debug: false,
      wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL' },
@@ -142,7 +142,7 @@ miTA.save();
 afip.js  afipjs/  crt_homo.crt  key_homo.key  package-lock.json  TA.xml
 ```
 
-Como se ve arriba, se genera el archivo TA.xml (indicado en *tmpTAFile*), en este caso, en el directorio actual.
+Como se ve arriba, se genera el archivo TA-${servicio}.xml en la ruta indicada en *tmpTAFileDir*), en este caso, en el directorio actual.
 
 Ahora, para crear un TA desde un archivo se utiliza el metodo *createTAFromFile* de la siguiente manera:
 

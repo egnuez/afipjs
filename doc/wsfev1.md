@@ -9,7 +9,7 @@ A continuacion de da algunos ejemplos de los servicios que, al menos yo, utlizo 
 ### FEDummy (para saber si el server esta funcionando bien)
 
 ```javascript
-const wsfe = new Wsfe1(TA);
+const wsfe = new Wsfe(TA);
 const response = await wsfe.FEDummy({});
 console.log(response);
 ```
@@ -227,6 +227,25 @@ console.dir(response, { depth: null });
 019 2:23:35 AM' } ] } } }
 ```
 
+### Llamar a un servicio del Webservice WSFE con un token valido pero obtenido para el Webservice WSFEX:
+
+```javascript
+var wsaa = new Wsaa({service:'wsfex'});
+const miTA2 = wsaa.createTAFromFile();
+const wsfe = new Wsfe(miTA2);
+response = await wsfe.FEParamGetTiposCbte({});
+console.dir(response, { depth: null });
+```
+
+```javascript
+{ FEParamGetTiposCbteResult:
+   { Errors:
+      { Err:
+         [ { Code: 600,
+             Msg:
+              'ValidacionDeToken: No valido Id Sistema: wsfe(Id Sistema de token es: wsfex)' } ] } } }
+```
+
 ### Prueba sin conexion a internet:
 
 ```javascript
@@ -266,5 +285,5 @@ try {
   code: 'ETIMEDOUT',
   syscall: 'connect',
   address: '200.1.116.57',
-  port: 80 }
+  port: 403 }
 ```
