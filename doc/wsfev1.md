@@ -187,6 +187,8 @@ Devuelve una lista con los archivos generados, en este caso 1 solo.
 - FEParamGetPtosVenta
 - FEParamGetCotizacion
 
+La descripcion y parametros de cada uno puede encontrarse en la [documentacion oficial](https://www.afip.gob.ar/ws/documentacion/ws-factura-electronica.asp)
+
 ### Autenticacion [WSAA](wsaa.md)
 
 ## Errores
@@ -224,8 +226,6 @@ console.dir(response, { depth: null });
               'ValidacionDeToken: No validaron las fechas del token GenTime, ExpTime, NowUTC: 1554661566 (4/7/2019 6:25:36 PM), 1554704826 (4/8/2019 6:27:06 AM), 4/20/2
 019 2:23:35 AM' } ] } } }
 ```
-
-La descripcion y parametros de cada uno puede encontrarse en la [documentacion oficial](https://www.afip.gob.ar/ws/documentacion/ws-factura-electronica.asp)
 
 ### Prueba sin conexion a internet:
 
