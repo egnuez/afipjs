@@ -10,11 +10,11 @@ npm install afipjs
 ## Ejemplo rapido de uso
 
 ```javascript
-const { Wsaa, Wsfe1 } = require('./afipjs');
+const { Wsaa, Wsfe } = require('./afipjs');
 var wsaa = new Wsaa();
 let miTRA = wsaa.createTRA();
 const miTA = await miTRA.supplyTA();
-const wsfe = new Wsfe1(miTA);
+const wsfe = new Wsfe(miTA);
 const puntoDeVenta = 1;
 const ultimoAutorizado = 48
 const factura = {
