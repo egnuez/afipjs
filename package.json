@@ -1,6 +1,6 @@
 {
   "name": "afipjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Libreria para uso de los Webservices de AFIP con Node.js",
   "main": "afip.js",
   "scripts": {
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/emilianito/afipjs#readme",
   "dependencies": {
     "@fidm/x509": "^1.2.1",
+    "bwip-js": "^1.7.2",
     "node-forge": "^0.7.6",
     "soap": "^0.24.0",
     "xml2js": "^0.4.19"
