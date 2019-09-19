@@ -1,6 +1,6 @@
 {
   "name": "afipjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Libreria para uso de los Webservices de AFIP con Node.js",
   "main": "afip.js",
   "scripts": {
