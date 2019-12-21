@@ -139,7 +139,7 @@ miTA.save();
 
 ```
 λ ls
-afip.js  afipjs/  crt_homo.crt  key_homo.key  package-lock.json  TA.xml
+afip.js  afipjs/  crt_homo.crt  key_homo.key  package-lock.json  TA-wsfe.xml
 ```
 
 Como se ve arriba, se genera el archivo TA-${servicio}.xml en la ruta indicada en *tmpTAFileDir*), en este caso, en el directorio actual.
@@ -166,6 +166,12 @@ console.log(miTA2.isValid());
 
 ```javascript
 true
+```
+
+El metodo *getTA* obtiene una TA valido, obteniendo uno si es necesario. Basicamente, crea un TA desde archivo si existe y es valido, en caso contrario llama a *supplyTA* y crea un nuevo archivo con el TA.
+
+```javascript
+const miTA = await miTRA.getTA();
 ```
 
 Ahora que ya hay un ticket valido creado, se puede empezar a utilizar los servicio de Factura Electronica, provisto por el Webservice Wsfe1, para es necesario crear un objeto Wsfe1 y luego llamar al servicio que necesitemos:
