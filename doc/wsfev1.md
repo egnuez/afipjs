@@ -287,3 +287,94 @@ try {
   address: '200.1.116.57',
   port: 403 }
 ```
+
+### Autorizar en lote:
+
+Ejemplo de autorizacion de 2 facturas en la misma llamada.
+
+```javascript
+const puntoDeVenta = 1;
+const ultimoAutorizado = 60;
+
+const facturas = {
+    FeCAEReq:{
+        FeCabReq:{
+            CantReg:2,
+            PtoVta:puntoDeVenta,
+            CbteTipo:11
+        },
+        FeDetReq:{
+            FECAEDetRequest:[{
+                Concepto:1,
+                DocTipo:80,
+                DocNro:"23000000000",
+                CbteDesde:ultimoAutorizado + 1,
+                CbteHasta:ultimoAutorizado + 1,
+                CbteFch:'20200130',
+                ImpTotal:1.00,
+                ImpTotConc:0.00,
+                ImpNeto:1.00,
+                ImpOpEx:0.00,
+                ImpTrib:0.00,
+                ImpIVA:0.00,
+                MonId:"PES",
+                MonCotiz:1
+            },{
+                Concepto:1,
+                DocTipo:80,
+                DocNro:"23000000000",
+                CbteDesde:ultimoAutorizado + 2,
+                CbteHasta:ultimoAutorizado + 2,
+                CbteFch:'20200130',
+                ImpTotal:2.00,
+                ImpTotConc:0.00,
+                ImpNeto:2.00,
+                ImpOpEx:0.00,
+                ImpTrib:0.00,
+                ImpIVA:0.00,
+                MonId:"PES",
+                MonCotiz:1
+            }]
+        }
+    }
+};
+
+response = await wsfe.FECAESolicitar(facturas);
+console.dir(response, { depth: null });
+```
+
+```javascript
+{ FECAESolicitarResult:
+   { FeCabResp:
+      { Cuit: '20278650988',
+        PtoVta: 1,
+        CbteTipo: 11,
+        FchProceso: '20200130152933',
+        CantReg: 2,
+        Resultado: 'A',
+        Reproceso: 'N' },
+     FeDetResp:
+      { FECAEDetResponse:
+         [ { Concepto: 1,
+             DocTipo: 80,
+             DocNro: '23000000000',
+             CbteDesde: '61',
+             CbteHasta: '61',
+             CbteFch: '20200130',
+             Resultado: 'A',
+             CAE: '70058815371300',
+             CAEFchVto: '20200209' },
+           { Concepto: 1,
+             DocTipo: 80,
+             DocNro: '23000000000',
+             CbteDesde: '62',
+             CbteHasta: '62',
+             CbteFch: '20200130',
+             Resultado: 'A',
+             CAE: '70058815371313',
+             CAEFchVto: '20200209' } ] } } }
+
+```
+
+Aconsejo mirar en la documentacion oficial los posibles errores que puede devolver este tipo de llamadas, 
+"4.1.5 Operatoria ante errores" del Manual del desarrollador
