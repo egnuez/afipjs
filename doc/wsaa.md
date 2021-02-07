@@ -2,51 +2,37 @@
 
 La clase Wsaa permite manejar Tickets, la clase Wsfe1 permite acceder a los servicio de facturacion.
 
-```javascript
-const { Wsaa, Wsfe } = require('./afipjs');
-var wsaa = new Wsaa();
-console.log(wsaa);
-```
-
-```javascript
-Wsaa {
-  config:
-   { crt: 'crt_homo.crt',
-     key: 'key_homo.key',
-     prod: false,
-     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFileDir: './',
-     service: 'wsfe',
-     debug: false,
-     url_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     mock: false },
-  certifcate:
-   { validFrom: 2018-08-01T23:11:35.000Z,
-     validTo: 2020-07-31T23:11:35.000Z,
-     version: 3,
-     serialNumber: '6d52ef949e466a87',
-     issuer: { CN: 'Computadores Test', C: 'AR', O: 'AFIP' },
-     subject: { CN: 'invoicedev', SN: 'CUIT 20278650988' } } }
-```
-Cuaquier de la opciones de configuracion se pueden cambiar en el constructor de la clase, por ejemplo, si quiero habilitar el debug:
-
-
-```javascript
-var wsaa = new Wsaa();
-//var wsaa = new Wsaa({debug:true}); // Habilita el debug
-```
-
-Las mas importantes son:
+Opciones de configuracion:
 
 - *debug*: Muestra (o no) datos de ejecucion como los datos enviados y recibidos a/y desde el webservice.
-- *crt*: Ruta al certificado firmado por la AFIP. [Como obtener certificados](https://www.afip.gob.ar/ws/WSAA/WSAA.ObtenerCertificado.pdf)
-- *key*: La ruta a la clave privada.
 - *prod*: Indica si se va a utilizar el entoro de Produccion o el Homologacion.
 - *service*: Indica para que web service se solicitara acceso, por ahora solo wsfe1 esta disponible.
-- *tmpTAFileDir*: Ruta al al directorio que contendra' el tiket generado en caso de guardarlo con el metodo *save* o leerlo con *createTAFromFile*
 
-El campo *certifcate* solo muestra informacion del certificado en *crt*
+
+```javascript
+const { Wsaa, Wsfe } = require('./afipjs');
+var pem = fs.readFileSync('path/to/CertTest.pem', 'utf8')
+var key = fs.readFileSync('path/to/keyTest.pem', 'utf8')
+const conf =  {
+    prod: false,
+    debug: true,
+}
+const wsaa = new Wsaa(conf)
+wsaa.setCertificate(pem)
+wsaa.setKey(key)
+console.log(wsaa.certificate)
+```
+
+```javascript
+{
+  validFrom: 2021-02-06T21:03:28.000Z,
+  validTo: 2023-02-06T21:03:28.000Z,
+  version: 3,
+  serialNumber: '6e28eedea2f859c3',
+  issuer: { CN: 'Computadores Test', C: 'AR', O: 'AFIP' },
+  subject: { CN: 'IbrickInvoice', SN: 'CUIT 20278650988' }
+}
+```
 
 ### Crear un TRA
 
@@ -55,123 +41,109 @@ Una TRA no es mas que un XML que se encripta con tu certificado.
 Para generar un TRA se usa el metodo *createTRA*
 
 ```javascript
-let miTRA = wsaa.createTRA();
-console.dir(miTRA,  { depth: null })
+const tra = wsaa.createTRA()
+console.log(tra)
 ```
 
 ```javascript
 TRA {
-  config:
-   { crt: 'crt_homo.crt',
-     key: 'key_homo.key',
-     prod: false,
-     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFileDir: './',
-     service: 'wsfe',
-     debug: false,
-     wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     mock: false },
-  TRA:
-   '<?xml version="1.0" encoding="UTF-8"?><loginTicketRequest version="1.0"><header><uniqueId>1554575143</uniqueId><generationTime>2019-04-06T18:24:43+00:00</generationTime><expirationTime>2019-04-06T18:26:43+00:00</expirationTime></header><service>wsfe</service></loginTicketRequest>',
-  TRA_parsed:
-   { loginTicketRequest:
-      { '$': { version: '1.0' },
-        header:
-         [ { uniqueId: [ '1554575143' ],
-             generationTime: [ '2019-04-06T18:24:43+00:00' ],
-             expirationTime: [ '2019-04-06T18:26:43+00:00' ] } ],
-        service: [ 'wsfe' ] } },
-  cms:
-   'MIIGEwYJKoZIhvcNAQcCoIIGBDCCBgACAQExCz...' }
+  config: {
+    prod: false,
+    service: 'wsfe',
+    debug: true,
+    url_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL'
+  },
+  TRA: '<?xml version="1.0" encoding="UTF-8"?><loginTicketRequest version="1.0"><header><uniqueId>1612733511</uniqueId><generationTime>2021-02-07T18:30:51-03:00</generationTime><expirationTime>2021-02-07T18:32:51-03:00</expirationTime></header><service>wsfe</service></loginTicketRequest>',
+  TRA_parsed: {
+    loginTicketRequest: { '$': [Object], header: [Array], service: [Array] }
+  },
+  cms: 'MIIGFgYJKoZIhvcNAQcCoIIGBzCCBgMCAQExCzAJBgUrDgM......'
+}
 ```
-
-Alli arriba se puede ver el TRA en texto crudo sin encriptar (xml) y el TRA encriptado, el cual se llama CMS (Cryptographic Message Syntax).
-
-Ahora deberiamos obtener un Ticket de Acceso (TA) valido, para eso se utiliza el metodo *supplyTA* de la clase TRA.
 
 ```javascript
-const miTA = await miTRA.supplyTA();
-console.log(miTA);
+try {
+  const newTa = await tra.supplicateTA()
+  console.log(newTa)
+} catch(err) {
+  console.log(err.root)
+}
 ```
+
+```javascript
+TA {
+  TA: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+    '<loginTicketResponse version="1.0">\n' +
+    '    <header>\n' +
+    '        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n' +
+    '        <destination>SERIALNUMBER=CUIT 20278650988, CN=ibrickinvoice</destination>\n' +
+    '        <uniqueId>3326504285</uniqueId>\n' +
+    '        <generationTime>2021-02-07T18:31:52.043-03:00</generationTime>\n' +
+    '        <expirationTime>2021-02-08T06:31:52.043-03:00</expirationTime>\n' +
+    '    </header>\n' +
+    '    <credentials>\n' +
+    '        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0i...</token>\n' +
+    '        <sign>PnZJ3icY7WAWWiVWzbA7PQ...</sign>\n' +
+    '    </credentials>\n' +
+    '</loginTicketResponse>',
+  TA_parsed: {
+    generationTime: '2021-02-07T18:31:52.043-03:00',
+    expirationTime: '2021-02-08T06:31:52.043-03:00',
+    token: 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZG....',
+    sign: 'PnZJ3icY7WAWWiVWzbA7PQV7UNbcsYzlcPCDlf...',
+    cuit: '20278650988'
+  }
+}
+```
+
+# Tomar un TA desde un string y verificar su validez
+
+```javascript
+const prev_ta =  '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+  '<loginTicketResponse version="1.0">\n' +
+  '    <header>\n' +
+  '        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n' +
+  '        <destination>SERIALNUMBER=CUIT 20278650988, CN=ibrickinvoice</destination>\n' +
+  '        <uniqueId>940678721</uniqueId>\n' +
+  '        <generationTime>2021-02-07T16:38:37.317-03:00</generationTime>\n' +
+  '        <expirationTime>2021-02-08T04:38:37.317-03:00</expirationTime>\n' +
+  '    </header>\n' +
+  '    <credentials>\n' +
+  '        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNv....</token>\n' +
+  '        <sign>tBgdeCigauhYL2i7L5C4FAKTP6SxxhrEo7KQKsAyAIC...</sign>\n' +
+  '    </credentials>\n' +
+  '</loginTicketResponse>'
+
+  const ta = wsaa.createTAFromString(prev_ta)
+  console.log(ta)
+  console.log(ta.isValid())
+```
+
 ```javascript
 TA {
-  config:
-   { crt: 'crt_homo.crt',
-     key: 'key_homo.key',
-     prod: false,
-     url_wdsl_devel: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     url_wdsl_prod: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL',
-     tmpTAFileDir: './',
-     service: 'wsfe',
-     debug: false,
-     wsaa_wdsl: 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL' },
-  TA:
-   '\n<loginTicketResponse version="1.0">\n    <header>\n        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n        <destination>SERIALNUMBER=CUIT 20278650988, CN=invoicedev</destination>\n        <uniqueId>190169448</uniqueId>\n        <generationTime>2019-04-04T13:42:31.804-03:00</generationTime>\n
-     <expirationTime>2019-04-05T01:42:31.804-03:00</expirationTime>\n    </header>\n    <credentials>\n        <token>PD94bWwgdmVyc2....</token>\n        <sign>....</sign>\n    </credentials>\n</loginTicketResponse>\n',
-  TA_parsed:
-   { generationTime: '2019-04-04T13:42:31.804-03:00',
-     expirationTime: '2019-04-05T01:42:31.804-03:00',
-     token:
-      'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0i....',
-     sign:
-      'IhDUsUWjZ+8jCqi...',
-     cuit: '20278650988' } }
-```
-
-Arriba se ve el TA crudo en XML, y parseado para acceder mas facilmete a los datos del ticket.
-
-Tambien se puede ver si el ticket es valido (no esta expirado)
-
-```javascript
-console.log(miTA.isValid());
-```
-
-```javascript
+  TA: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+    '<loginTicketResponse version="1.0">\n' +
+    '    <header>\n' +
+    '        <source>CN=wsaahomo, O=AFIP, C=AR, SERIALNUMBER=CUIT 33693450239</source>\n' +
+    '        <destination>SERIALNUMBER=CUIT 20278650988, CN=ibrickinvoice</destination>\n' +
+    '        <uniqueId>940678721</uniqueId>\n' +
+    '        <generationTime>2021-02-07T16:38:37.317-03:00</generationTime>\n' +
+    '        <expirationTime>2021-02-08T04:38:37.317-03:00</expirationTime>\n' +
+    '    </header>\n' +
+    '    <credentials>\n' +
+    '        <token>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu...</token>\n' +
+    '        <sign>tBgdeCigauhYL2i7L5C4FAKTP6Sxx...</sign>\n' +
+    '    </credentials>\n' +
+    '</loginTicketResponse>',
+  TA_parsed: {
+    generationTime: '2021-02-07T16:38:37.317-03:00',
+    expirationTime: '2021-02-08T04:38:37.317-03:00',
+    token: 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNv...',
+    sign: 'tBgdeCigauhYL2i7L5C4FAKTP6Sxxh..',
+    cuit: '20278650988'
+  }
+}
 true
-```
-
-Para guardar el TA:
-
-```javascript
-miTA.save();
-```
-
-```
-λ ls
-afip.js  afipjs/  crt_homo.crt  key_homo.key  package-lock.json  TA-wsfe.xml
-```
-
-Como se ve arriba, se genera el archivo TA-${servicio}.xml en la ruta indicada en *tmpTAFileDir*), en este caso, en el directorio actual.
-
-Ahora, para crear un TA desde un archivo se utiliza el metodo *createTAFromFile* de la siguiente manera:
-
-```javascript
-const miTA2 = wsaa.createTAFromFile();
-console.log(miTA2);
-```
-
-```javascript
-{ generationTime: '2019-04-04T13:42:31.804-03:00',
-  expirationTime: '2019-04-05T01:42:31.804-03:00',
-  token:
-   'PD94bWwgdmVyc2lvbj0i....',
-  sign:
-   'IhDUsUWjZ+8jCqiM.....',
-  cuit: '20278650988' }
-```
-```javascript
-console.log(miTA2.isValid());
-```
-
-```javascript
-true
-```
-
-El metodo *getTA* obtiene una TA valido, obteniendo uno si es necesario. Basicamente, crea un TA desde archivo si existe y es valido, en caso contrario llama a *supplyTA* y crea un nuevo archivo con el TA.
-
-```javascript
-const miTA = await miTRA.getTA();
 ```
 
 Ahora que ya hay un ticket valido creado, se puede empezar a utilizar los servicio de Factura Electronica, provisto por el Webservice Wsfe1, para es necesario crear un objeto Wsfe1 y luego llamar al servicio que necesitemos:

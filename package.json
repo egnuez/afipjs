@@ -25,8 +25,8 @@
   "dependencies": {
     "@fidm/x509": "^1.2.1",
     "bwip-js": "^1.7.2",
-    "node-forge": "^0.7.6",
-    "soap": "^0.30.0",
+    "node-forge": ">=0.10.0",
+    "soap": "^0.36.0",
     "xml2js": "^0.4.19"
   }
 }
